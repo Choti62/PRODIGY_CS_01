@@ -1,0 +1,98 @@
+task 2
+PRODIGY_CS_02
+# Image Encryption using Pixel Manipulation in C++
+
+## 📌 Project Description
+In this project, we implement a **simple image encryption tool** using **C++ and OpenCV**. The encryption is done using **bitwise XOR operation** at the pixel level, making the image unreadable without the correct key. The same key can be used to **decrypt** the image back to its original form.
+
+## 🚀 Features
+✔️ Encrypts images by modifying pixel values using **bitwise XOR**
+✔️ Decrypts the encrypted image back to its **original form**
+✔️ Uses a **user-defined key** for encryption & decryption
+✔️ Works with **all types of images** supported by OpenCV
+
+## 🛠️ Requirements
+To run this project, you need:
+- C++ Compiler (GCC/MSVC/Clang)
+- OpenCV library installed (`sudo apt install libopencv-dev` for Linux users)
+
+## 💻 Code Implementation
+
+```cpp
+#include <opencv2/opencv.hpp>
+#include <iostream>
+#include <cstdlib>
+
+using namespace cv;
+using namespace std;
+
+void encryptImage(const string& imagePath, int key) {
+    Mat image = imread(imagePath);
+    if (image.empty()) {
+        cout << "Error: Image not found!" << endl;
+        return;
+    }
+    
+    Mat encryptedImage = image.clone();
+    srand(key);
+    for (int i = 0; i < image.rows; i++) {
+        for (int j = 0; j < image.cols; j++) {
+            for (int k = 0; k < image.channels(); k++) {
+                encryptedImage.at<Vec3b>(i, j)[k] ^= rand() % 256;
+            }
+        }
+    }
+    
+    imwrite("encrypted_image.png", encryptedImage);
+    cout << "Image successfully encrypted and saved as 'encrypted_image.png'" << endl;
+}
+
+void decryptImage(const string& encryptedPath, int key) {
+    Mat encryptedImage = imread(encryptedPath);
+    if (encryptedImage.empty()) {
+        cout << "Error: Encrypted image not found!" << endl;
+        return;
+    }
+    
+    Mat decryptedImage = encryptedImage.clone();
+    srand(key);
+    for (int i = 0; i < encryptedImage.rows; i++) {
+        for (int j = 0; j < encryptedImage.cols; j++) {
+            for (int k = 0; k < encryptedImage.channels(); k++) {
+                decryptedImage.at<Vec3b>(i, j)[k] ^= rand() % 256;
+            }
+        }
+    }
+    
+    imwrite("decrypted_image.png", decryptedImage);
+    cout << "Image successfully decrypted and saved as 'decrypted_image.png'" << endl;
+}
+
+int main() {
+    int key = 42;  // Change this key for encryption & decryption
+    string imagePath = "input_image.png";  // Input image
+    
+    encryptImage(imagePath, key);
+    decryptImage("encrypted_image.png", key);
+    
+    return 0;
+}
+```
+
+## 🔧 How to Run
+1️⃣ **Ensure OpenCV is installed** on your system.
+2️⃣ **Place an image** in the project folder and rename it `input_image.png`.
+3️⃣ **Compile & Run** the program:
+   ```sh
+   g++ image_encryption.cpp -o image_encryption `pkg-config --cflags --libs opencv4`
+   ./image_encryption
+   ```
+4️⃣ The encrypted image `encrypted_image.png` will be generated.
+5️⃣ Run the program again to decrypt and obtain `decrypted_image.png`.
+
+## 📌 Use Cases
+🔹 **Securing confidential images** 🛡️
+🔹 **Image-based authentication systems** 🔍
+🔹 **Basic understanding of encryption algorithms** 🤖
+
+
